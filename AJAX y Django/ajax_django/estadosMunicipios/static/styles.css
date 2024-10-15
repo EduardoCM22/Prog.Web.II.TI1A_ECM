@@ -1,0 +1,36 @@
+body {
+    background-color: #e9ecef; /* Color de fondo suave */
+    font-family: 'Arial', sans-serif; /* Fuente más moderna */
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.card {
+    background-color: #ffffff; /* Fondo blanco para la tarjeta */
+    border-radius: 0.5rem; /* Bordes redondeados */
+}
+
+label {
+    color: #343a40; /* Color gris oscuro */
+}
+
+.form-control {
+    border-radius: 0.5rem; /* Bordes más redondeados */
+    border: 1px solid #ced4da; /* Borde suave */
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Color de borde en foco */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Sombra en foco */
+}
+
+option {
+    padding: 10px; /* Espaciado en las opciones */
+}
+
+.mt-4 {
+    margin-top: 2rem !important; /* Espaciado superior adicional para la tarjeta */
+}
