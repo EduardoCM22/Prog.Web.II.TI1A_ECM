@@ -54,7 +54,7 @@
 
 
 {% block javascript %}
-<script>
+<!-- <script>
     $(document).ready(function () {
         /*
             On submiting the form, send the POST ajax
@@ -129,5 +129,82 @@
             })
         })
     })
+</script> -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Handle form submission
+        document.getElementById("friend-form").addEventListener("submit", async function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Serialize the form data
+            const formData = new FormData(this);
+            const serializedData = new URLSearchParams(formData).toString();
+
+            try {
+                // Make POST request using Fetch API
+                const response = await fetch("{% url 'post_friend' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: serializedData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(errorData.error);
+                    return;
+                }
+
+                const data = await response.json();
+                // Clear the form and reset focus
+                this.reset();
+                document.getElementById("id_nick_name").focus();
+
+                // Display the new friend in the table
+                const instance = JSON.parse(data.instance);
+                const fields = instance[0].fields;
+                const tbody = document.querySelector("#my_friends tbody");
+                tbody.insertAdjacentHTML('afterbegin', `
+                    <tr>
+                        <td>${fields.nick_name || ""}</td>
+                        <td>${fields.first_name || ""}</td>
+                        <td>${fields.last_name || ""}</td>
+                        <td>${fields.likes || ""}</td>
+                        <td>${fields.dob || ""}</td>
+                        <td>${fields.lives_in || ""}</td>
+                    </tr>
+                `);
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while submitting the form.");
+            }
+        });
+
+        // Check nickname availability on focus out
+        document.getElementById("id_nick_name").addEventListener("focusout", async function (e) {
+            const nick_name = this.value;
+
+            try {
+                // Make GET request using Fetch API
+                const response = await fetch("{% url 'validate_nickname' %}?nick_name=" + encodeURIComponent(nick_name), {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const data = await response.json();
+                if (!data.valid) {
+                    alert("You cannot create a friend with the same nick name");
+                    this.value = ""; // Clear the input
+                    this.focus(); // Refocus on the input
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+    });
 </script>
 {% endblock javascript %}
