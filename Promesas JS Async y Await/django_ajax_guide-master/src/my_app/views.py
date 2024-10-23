@@ -14,7 +14,8 @@ def indexView(request):
 
 def postFriend(request):
     # request should be ajax and method should be POST.
-    if request.is_ajax and request.method == "POST":
+    #if request.is_ajax and request.method == "POST":
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == "POST":
         # get the form data
         form = FriendForm(request.POST)
         # save the data and after fetch the object in instance
@@ -34,7 +35,8 @@ def postFriend(request):
 # BONUS CBV
 def checkNickName(request):
     # request should be ajax and method should be GET.
-    if request.is_ajax and request.method == "GET":
+    #if request.is_ajax and request.method == "GET":
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == "GET":
         # get the nick name from the client side.
         nick_name = request.GET.get("nick_name", None)
         # check for the nick name in the database.
@@ -62,7 +64,8 @@ class FriendView(View):
 
     def post(self, *args, **kwargs):
         # request should be ajax and method should be POST.
-        if self.request.is_ajax and self.request.method == "POST":
+        #if self.request.is_ajax and self.request.method == "POST":
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest' and self.request.method == "POST":
             # get the form data
             form = self.form_class(self.request.POST)
             # save the data and after fetch the object in instance
